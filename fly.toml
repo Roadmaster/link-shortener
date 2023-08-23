@@ -13,3 +13,11 @@ primary_region = "yul"
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
+
+  [[http_service.checks]]
+  grace_period = "10s"
+  interval = "1m0s"
+  method = "GET"
+  path = "/check/healthy"
+  timeout = "5s"
+
