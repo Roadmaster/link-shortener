@@ -2,4 +2,4 @@ FastAPI[all]
 sqlalchemy[asyncio]
 aiosqlite
 asyncpg
-
+prometheus-fastapi-instrumentator

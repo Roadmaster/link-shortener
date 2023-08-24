@@ -1,9 +1,12 @@
-from fastapi import FastAPI
 import datetime
+
+from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
+
 from . import database
-from sqlalchemy import text
 
 app = FastAPI()
+Instrumentator().instrument(app).expose(app)
 
 
 @app.get("/")
