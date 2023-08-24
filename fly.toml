@@ -26,7 +26,7 @@ path = "/metrics"
   path = "/check/healthy"
   timeout = "5s"
   [http_service.concurrency]
-  type = "connections"
-  hard_limit = 50
-  soft_limit = 45
+  type = "requests"
+  hard_limit = 150
+  soft_limit = 130
 
