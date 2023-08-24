@@ -46,5 +46,9 @@ async def write_record(conn, check_id, time):
 
 
 engine = create_async_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args=connect_args, echo=False
+    SQLALCHEMY_DATABASE_URL,
+    connect_args=connect_args,
+    echo=False,
+    pool_pre_ping=True,
+    pool_recycle=1800,
 )
