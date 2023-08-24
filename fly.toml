@@ -6,6 +6,11 @@
 app = "roadmr-link-shortener"
 primary_region = "yul"
 
+
+[metrics]
+port = 8000
+path = "/metrics"
+
 [http_service]
   internal_port = 8000
   force_https = true
