@@ -20,4 +20,8 @@ primary_region = "yul"
   method = "GET"
   path = "/check/healthy"
   timeout = "5s"
+  [[http_service.concurrency]]
+  type = "requests"
+  hard_limit = 20
+  soft_limit = 10
 
