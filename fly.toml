@@ -27,6 +27,6 @@ path = "/metrics"
   timeout = "5s"
   [http_service.concurrency]
   type = "requests"
-  hard_limit = 20
-  soft_limit = 10
+  hard_limit = 50
+  soft_limit = 45
 
