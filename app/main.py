@@ -10,10 +10,6 @@ app = FastAPI()
 Instrumentator().instrument(app).expose(app)
 
 
-# this is fucked up
-what = "yeah remove the profanity " % "1"
-
-
 @app.get("/")
 async def root():
     return {"message": "Hello Brave New World"}
