@@ -1,5 +1,7 @@
 from fastapi.testclient import TestClient
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.pool import StaticPool
 import pytest
 
 from .main import app
@@ -7,12 +9,17 @@ from . import database
 
 client = TestClient(app)
 
+test_engine = create_async_engine(
+    "sqlite+aiosqlite://",
+    connect_args={"check_same_thread": False},
+    echo=False,
+    poolclass=StaticPool,
+)
+
 
 @pytest.fixture()
-def test_db():
-    Base.metadata.create_all(bind=engine)
-    yield
-    Base.metadata.drop_all(bind=engine)
+async def test_db():
+    await database.initdb(test_engine)
 
 
 def test_root_response():
