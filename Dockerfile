@@ -15,7 +15,7 @@ ENV LC_ALL en_US.UTF-8
 WORKDIR /code
 
 copy ./requirements.txt /code/requirements.txt
-RUN dd if=/dev/urandom of=/code/largefile bs=1M count=478
+# RUN dd if=/dev/urandom of=/code/largefile bs=1M count=478
 
 RUN python3 -mvenv env
 RUN env/bin/pip install --no-cache-dir --upgrade -r requirements.txt
