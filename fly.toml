@@ -29,4 +29,3 @@ path = "/metrics"
   type = "requests"
   hard_limit = 150
   soft_limit = 130
-

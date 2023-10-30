@@ -16,6 +16,7 @@ async def root():
 
 
 @app.get("/check/{check_id}")
+@app.head("/check/{check_id}")
 async def health_check(check_id: str):
     await database.initdb(database.engine)
     fail = False

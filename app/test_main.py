@@ -33,10 +33,16 @@ async def test_health_check():
     response = client.get("/check/thisid")
     assert "App is healthy: " in response.text
 
-    database.initdb(database.engine)
+    await database.initdb(database.engine)
     async with database.engine.connect() as conn:
         result = await conn.execute(
             text("SELECT count(*) as ct FROM accesses WHERE name='thisid' ")
         )
         row = result.first()
         assert row.ct >= 1  # This test is bogus right now
+
+
+@pytest.mark.asyncio
+async def test_health_check_head():
+    response = client.head("/check/thisid")
+    assert response.status_code == 200
