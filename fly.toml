@@ -5,6 +5,7 @@
 
 app = "roadmr-link-shortener"
 primary_region = "yul"
+swap_size_mb = 512
 
 
 [metrics]
