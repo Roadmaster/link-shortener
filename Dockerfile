@@ -21,5 +21,6 @@ RUN python3 -mvenv env
 RUN env/bin/pip install --no-cache-dir --upgrade -r requirements.txt
 
 COPY ./app /code/app
+COPY ./log_conf.yaml ./
 
 CMD ["env/bin/uvicorn",  "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-config", "log_conf.yaml"]
