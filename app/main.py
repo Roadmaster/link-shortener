@@ -2,9 +2,11 @@ import datetime
 
 from fastapi import FastAPI, HTTPException
 from prometheus_fastapi_instrumentator import Instrumentator
+import logging
 
 
 from . import database
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 Instrumentator().instrument(app).expose(app)
@@ -18,6 +20,8 @@ async def root():
 @app.get("/check/{check_id}")
 @app.head("/check/{check_id}")
 async def health_check(check_id: str):
+    logger.info("Getting health check")
+    logger.debug("This is a debug message")
     await database.initdb(database.engine)
     fail = False
     if fail:
@@ -27,6 +31,7 @@ async def health_check(check_id: str):
     time = datetime.datetime.now()
     async with database.engine.connect() as conn:
         # Write a record
+        logger.error("Don't panic, everything is ok")
         await database.write_record(conn=conn, check_id=check_id, time=time)
 
     return f"App is healthy: {time}"
