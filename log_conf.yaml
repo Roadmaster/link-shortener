@@ -3,10 +3,10 @@ disable_existing_loggers: False
 formatters:
   default:
     # "()": uvicorn.logging.DefaultFormatter
-    format: '{"timestamp": "%(asctime)s", "name": "%(name)s",  "level": "%(levelname)s", "message": %(message)s}'
+    format: '{"timestamp": "%(asctime)s", "name": "%(name)s",  "level": "%(levelname)s", "message": "%(message)s"}'
   access:
     # "()": uvicorn.logging.AccessFormatter
-    format: '{"timestamp": "%(asctime)s", "name": "%(name)s",  "level": "%(levelname)s", "message": %(message)s}'
+    format: '{"timestamp": "%(asctime)s", "name": "%(name)s",  "level": "%(levelname)s", "message": "%(message)s"}'
 handlers:
   default:
     formatter: default
