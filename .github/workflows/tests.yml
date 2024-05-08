@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '25 13,14,15,16,17,18,19,20 * * *'
 jobs:
   unit-tests:
     name: Unit tests yes
@@ -17,4 +19,3 @@ jobs:
           python3 -mvenv venv
           venv/bin/pip install -r requirements-dev.txt
           venv/bin/pytest
-
