@@ -1,2 +1,6 @@
 fly.toml
 Dockerfile
+.git
+.gitignore
+.pytest_cache
+env
