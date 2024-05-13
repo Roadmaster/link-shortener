@@ -20,7 +20,7 @@ path = "/metrics"
   processes = ["app"]
 
   [[http_service.checks]]
-  grace_period = "10s"
+  grace_period = "5s"
   interval = "1m0s"
   method = "GET"
   path = "/check/healthy"

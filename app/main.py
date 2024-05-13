@@ -2,15 +2,21 @@ import datetime
 
 from fastapi import FastAPI, HTTPException
 from prometheus_fastapi_instrumentator import Instrumentator
+from prometheus_client import Summary
 import logging
+import redis.asyncio as redis
+import os
 
 
 from . import database
+
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 Instrumentator().instrument(app).expose(app)
 
+
+g = Summary('redis_response_time_seconds', 'Redis response time')
 
 @app.get("/")
 async def root():
@@ -23,6 +29,9 @@ async def health_check(check_id: str):
     logger.info("Getting health check")
     logger.debug("This is a debug message")
     await database.initdb(database.engine)
+    client = redis.from_url(
+            os.environ.get("REDIS_URL", "redis://localhost:6379")
+    )
     fail = False
     if fail:
         # reset fail in the db
@@ -33,8 +42,12 @@ async def health_check(check_id: str):
         # Write a record
         logger.error("Don't panic, everything is ok")
         await database.write_record(conn=conn, check_id=check_id, time=time)
+    with g.time():
+        await client.set("last_write", str(time))
+        lwrite = await client.get("last_write")
+        await client.aclose()
 
-    return f"App is healthy: {time}"
+    return f"App is healthy: {time} last write {lwrite}"
 
 
 # Add one endpoint
