@@ -5,7 +5,7 @@ from sqlalchemy.pool import StaticPool
 
 import pytest
 
-from .main import app
+from .main import app, get_redis
 from . import database
 
 client = TestClient(app)
@@ -23,10 +23,12 @@ async def test_db():
     await database.initdb(test_engine)
 
 
-@pytest.fixture()
-def redis_client(request):
+def redis_client():
     import fakeredis
     return fakeredis.FakeAsyncRedis()
+
+
+app.dependency_overrides[get_redis] = redis_client
 
 
 def test_root_response():
@@ -36,7 +38,7 @@ def test_root_response():
 
 @pytest.mark.asyncio
 # Damn async databases
-async def test_health_check(redis_client):
+async def test_health_check():
     response = client.get("/check/thisid")
     assert "App is healthy: " in response.text
 
@@ -50,6 +52,6 @@ async def test_health_check(redis_client):
 
 
 @pytest.mark.asyncio
-async def test_health_check_head(redis_client):
+async def test_health_check_head():
     response = client.head("/check/thisid")
     assert response.status_code == 200

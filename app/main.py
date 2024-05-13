@@ -5,8 +5,6 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Summary
 import logging
 import redis.asyncio as redis
-from typing import Annotated
-
 
 from . import database
 
@@ -25,15 +23,13 @@ async def root():
 
 
 async def get_redis():
-    pool = database.redis_pool 
+    pool = database.redis_pool
     return await redis.Redis(connection_pool=pool)
 
 
 @app.get("/check/{check_id}")
 @app.head("/check/{check_id}")
-async def health_check(
-    check_id: str, redis_client=Depends(get_redis)
-):
+async def health_check(check_id: str, redis_client=Depends(get_redis)):
     logger.info("Getting health check")
     logger.debug("This is a debug message")
     await database.initdb(database.engine)
