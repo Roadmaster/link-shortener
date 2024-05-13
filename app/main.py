@@ -1,11 +1,11 @@
 import datetime
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Summary
 import logging
 import redis.asyncio as redis
-import os
+from typing import Annotated
 
 
 from . import database
@@ -16,22 +16,27 @@ app = FastAPI()
 Instrumentator().instrument(app).expose(app)
 
 
-g = Summary('redis_response_time_seconds', 'Redis response time')
+g = Summary("redis_response_time_seconds", "Redis response time")
+
 
 @app.get("/")
 async def root():
     return {"message": "Hello Brave New World"}
 
 
+async def get_redis():
+    pool = database.redis_pool 
+    return await redis.Redis(connection_pool=pool)
+
+
 @app.get("/check/{check_id}")
 @app.head("/check/{check_id}")
-async def health_check(check_id: str):
+async def health_check(
+    check_id: str, redis_client=Depends(get_redis)
+):
     logger.info("Getting health check")
     logger.debug("This is a debug message")
     await database.initdb(database.engine)
-    client = redis.from_url(
-            os.environ.get("REDIS_URL", "redis://localhost:6379")
-    )
     fail = False
     if fail:
         # reset fail in the db
@@ -43,9 +48,9 @@ async def health_check(check_id: str):
         logger.error("Don't panic, everything is ok")
         await database.write_record(conn=conn, check_id=check_id, time=time)
     with g.time():
-        await client.set("last_write", str(time))
-        lwrite = await client.get("last_write")
-        await client.aclose()
+        await redis_client.set("last_write", str(time))
+        lwrite = await redis_client.get("last_write")
+        await redis_client.aclose()
 
     return f"App is healthy: {time} last write {lwrite}"
 

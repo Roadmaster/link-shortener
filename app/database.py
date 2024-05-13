@@ -1,9 +1,7 @@
 import os
 
-
 from sqlalchemy import Column
 from sqlalchemy import MetaData
-from sqlalchemy import select
 from sqlalchemy import String
 from sqlalchemy import Integer
 from sqlalchemy import Table
@@ -11,6 +9,8 @@ from sqlalchemy import DateTime
 
 
 from sqlalchemy.ext.asyncio import create_async_engine
+
+import redis.asyncio as redis
 
 
 meta = MetaData()
@@ -45,6 +45,12 @@ async def write_record(conn, check_id, time):
     await conn.commit()
 
 
+def create_redis():
+    return redis.ConnectionPool.from_url(
+        os.environ.get("REDIS_URL", "redis://localhost:6379")
+    )
+
+
 engine = create_async_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args=connect_args,
@@ -52,3 +58,5 @@ engine = create_async_engine(
     pool_pre_ping=True,
     pool_recycle=1800,
 )
+
+redis_pool = create_redis()

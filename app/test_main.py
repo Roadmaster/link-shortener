@@ -2,6 +2,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.pool import StaticPool
+
 import pytest
 
 from .main import app
@@ -22,6 +23,12 @@ async def test_db():
     await database.initdb(test_engine)
 
 
+@pytest.fixture()
+def redis_client(request):
+    import fakeredis
+    return fakeredis.FakeAsyncRedis()
+
+
 def test_root_response():
     response = client.get("/")
     assert response.json() == {"message": "Hello Brave New World"}
@@ -29,7 +36,7 @@ def test_root_response():
 
 @pytest.mark.asyncio
 # Damn async databases
-async def test_health_check():
+async def test_health_check(redis_client):
     response = client.get("/check/thisid")
     assert "App is healthy: " in response.text
 
@@ -43,6 +50,6 @@ async def test_health_check():
 
 
 @pytest.mark.asyncio
-async def test_health_check_head():
+async def test_health_check_head(redis_client):
     response = client.head("/check/thisid")
     assert response.status_code == 200
