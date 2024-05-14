@@ -37,7 +37,7 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
     fail = False
     if fail:
         # reset fail in the db
-        raise HTTPException(status_code=500, detail="I'm so flakey")
+        raise HTTPException(status_code=500, detail="Database error sqlite")
 
     time = datetime.datetime.now()
     async with database.engine.connect() as conn:
@@ -52,6 +52,7 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
         except Exception as bare:
             rce.inc()
             logger.exception(bare)
+            raise HTTPException(status_code=500, detail="Database error redis")
 
     return f"App is healthy: {time} last write {lwrite}"
 
