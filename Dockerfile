@@ -2,7 +2,7 @@ from ubuntu:22.04
 
 
 # install build dependencies
-RUN apt-get update -y && apt-get install -y python3-pip python3 locales python3-venv \
+RUN apt-get update -y && apt-get install -y python3-pip python3 locales python3-venv curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale

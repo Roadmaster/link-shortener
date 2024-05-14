@@ -1,9 +1,12 @@
 import datetime
+import logging
+import random
 
 from fastapi import Depends, FastAPI, HTTPException
+
 from prometheus_fastapi_instrumentator import Instrumentator
 from prometheus_client import Summary, Counter
-import logging
+
 import redis.asyncio as redis
 
 from . import database
@@ -45,8 +48,11 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
         logger.error("Don't panic, everything is ok")
         await database.write_record(conn=conn, check_id=check_id, time=time)
     with g.time():
+        expiry = random.randint(2500, 4000)
         try:
+            await redis_client.incr("counter")
             await redis_client.set("last_write", str(time))
+            await redis_client.set(str(time), "yipie", ex=expiry)
             lwrite = await redis_client.get("last_write")
             await redis_client.aclose()
         except Exception as bare:
