@@ -20,11 +20,11 @@ path = "/metrics"
   processes = ["app"]
 
   [[http_service.checks]]
-  grace_period = "5s"
+  grace_period = "10s"
   interval = "1m0s"
   method = "GET"
   path = "/check/healthy"
-  timeout = "5s"
+  timeout = "10s"
   [http_service.concurrency]
   type = "requests"
   hard_limit = 150
