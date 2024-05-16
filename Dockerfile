@@ -1,8 +1,12 @@
+# syntax=docker/dockerfile:1
 from ubuntu:22.04
 
 
 # install build dependencies
-RUN apt-get update -y && apt-get install -y python3-pip python3 locales python3-venv curl \
+
+RUN --mount=type=cache,target=/var/lib/apt,sharing=locked --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update -y && apt-get install --no-install-recommends -y \
+    python3-pip python3 locales python3-venv curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale

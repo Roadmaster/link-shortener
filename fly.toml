@@ -4,7 +4,7 @@
 #
 
 app = "roadmr-link-shortener"
-primary_region = "yul"
+primary_region = "mia"
 swap_size_mb = 512
 
 
