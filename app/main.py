@@ -35,7 +35,7 @@ async def get_redis():
 @app.head("/check/{check_id}")
 async def health_check(check_id: str, redis_client=Depends(get_redis)):
     logger.info("Getting health check")
-    logger.debug("This is a debug message")
+#    logger.debug("This is a debug message")
     await database.initdb(database.engine)
     fail = False
     if fail:
@@ -45,7 +45,7 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
     time = datetime.datetime.now()
     async with database.engine.connect() as conn:
         # Write a record
-        logger.error("Don't panic, everything is ok")
+        # logger.error("Don't panic, everything is ok")
         await database.write_record(conn=conn, check_id=check_id, time=time)
     with g.time():
         expiry = random.randint(2500, 4000)
