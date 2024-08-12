@@ -23,7 +23,7 @@ rce = Counter("redis_connection_errors_count", "Redis connection errors")
 
 @app.get("/")
 async def root():
-    return {"message": "Hello Brave New Worldo!!! YAY"}
+    return {"message": "Hello Brave New World"}
 
 
 async def get_redis():
