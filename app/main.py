@@ -50,7 +50,7 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
     with g.time():
         expiry = random.randint(2500, 4000)
         try:
-            await redis_client.incr("counter")
+            ctr_value = await redis_client.incr("counter")
             await redis_client.set("last_write", str(time))
             await redis_client.set(str(time), "yipie", ex=expiry)
             lwrite = await redis_client.get("last_write")
@@ -60,7 +60,7 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
             logger.exception(bare)
             raise HTTPException(status_code=500, detail="Database error redis")
 
-    return f"App is healthy: {time} last write {lwrite}"
+    return f"App is healthy: {time} last write {lwrite} counter {ctr_value}"
 
 
 # Add one endpoint
