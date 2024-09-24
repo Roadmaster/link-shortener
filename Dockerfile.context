@@ -1,0 +1,4 @@
+from alpine:latest
+WORKDIR /context
+
+copy . .

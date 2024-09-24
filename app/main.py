@@ -69,3 +69,9 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
 # and resets the make-health_fail thing
 #
 #
+
+
+@app.get("/oom")
+async def oom():
+    listy = ["a" for _ in range(1000000 * 256)]
+    return f"oom attempt"
