@@ -35,7 +35,7 @@ async def get_redis():
 @app.head("/check/{check_id}")
 async def health_check(check_id: str, redis_client=Depends(get_redis)):
     logger.info("Getting health check")
-#    logger.debug("This is a debug message")
+    #    logger.debug("This is a debug message")
     await database.initdb(database.engine)
     fail = False
     if fail:
@@ -74,4 +74,4 @@ async def health_check(check_id: str, redis_client=Depends(get_redis)):
 @app.get("/oom")
 async def oom():
     listy = ["a" for _ in range(1000000 * 256)]
-    return f"oom attempt"
+    return "oom attempt"
