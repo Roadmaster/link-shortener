@@ -7,6 +7,8 @@ app = "roadmr-link-shortener"
 primary_region = "mia"
 swap_size_mb = 512
 
+[deploy]
+  strategy = "bluegreen"
 
 [metrics]
 port = 8000
