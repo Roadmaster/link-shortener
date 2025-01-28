@@ -33,7 +33,7 @@ app.dependency_overrides[get_redis] = redis_client
 
 def test_root_response():
     response = client.get("/")
-    assert response.json() == {"message": "Hello Brave New World"}
+    assert response.json() == {"message": "Hello Brave New World by Aldous Huxley"}
 
 
 @pytest.mark.asyncio
