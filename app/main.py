@@ -16,6 +16,16 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 Instrumentator().instrument(app).expose(app)
 
+class EndpointFilter(logging.Filter):
+    def filter(self, record: logging.LogRecord) -> bool:
+        message = record.getMessage()
+        if " /metrics " in message or " /health " in message:
+            return False
+        return True
+
+
+# Filter out /endpoint
+logging.getLogger("uvicorn.access").addFilter(EndpointFilter())
 
 g = Summary("redis_response_time_seconds", "Redis response time")
 rce = Counter("redis_connection_errors_count", "Redis connection errors")
