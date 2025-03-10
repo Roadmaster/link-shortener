@@ -21,6 +21,8 @@ class EndpointFilter(logging.Filter):
         message = record.getMessage()
         if " /metrics " in message or " /health " in message:
             return False
+        if " /check/healthy " in message or " /check " in message:
+            return False
         return True
 
 
