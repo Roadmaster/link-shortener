@@ -1,5 +1,6 @@
 # syntax=docker/dockerfile:1
-from ubuntu:22.04
+FROM ubuntu:22.04
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 
 # install build dependencies
@@ -12,18 +13,22 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked --mount=type=cache,tar
 # Set the locale
 RUN echo 'en_US.UTF-8 UTF-8' >>/etc/locale.gen && locale-gen
 
-ENV LANG en_US.UTF-8
-ENV LANGUAGE en_US:en
-ENV LC_ALL en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+ENV UV_LINK_MODE=copy
+ENV UV_CACHE_DIR=/opt/uv-cache
 
 WORKDIR /code
 
-copy ./requirements.txt /code/requirements.txt
+COPY ./requirements.txt /code/requirements.txt
 
-RUN python3 -mvenv env
-RUN env/bin/pip install --no-cache-dir --upgrade -r requirements.txt
+
+# Venv by default in .venv (as per uv)
+RUN uv venv --python 3.10
+RUN --mount=type=cache,target=/opt/uv-cache VIRTUAL_ENV=env uv pip install --upgrade -r requirements.txt
 
 COPY ./app /code/app
 COPY ./log_conf.yaml ./
 
-CMD ["env/bin/uvicorn",  "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-config", "log_conf.yaml"]
+CMD ["uv","run", "uvicorn",  "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-config", "log_conf.yaml"]
