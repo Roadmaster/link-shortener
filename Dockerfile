@@ -7,7 +7,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update -y && apt-get install --no-install-recommends -y \
-    python3-pip python3 locales python3-venv curl \
+    python3 locales curl \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
@@ -19,16 +19,18 @@ ENV LC_ALL=en_US.UTF-8
 ENV UV_LINK_MODE=copy
 ENV UV_CACHE_DIR=/opt/uv-cache
 
+# Copy uv here because if uv changes it busts our base ubuntu image with packages
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 WORKDIR /code
 
-COPY ./requirements.txt /code/requirements.txt
 
+COPY ./pyproject.toml /code/pyproject.toml
+COPY ./uv.lock /code/uv.lock
 
-# Venv by default in .venv (as per uv)
-RUN uv venv --python 3.10
-RUN --mount=type=cache,target=/opt/uv-cache VIRTUAL_ENV=env uv pip install --upgrade -r requirements.txt
+RUN --mount=type=cache,target=/opt/uv-cache uv sync --no-group dev --frozen --compile-bytecode
 
 COPY ./app /code/app
 COPY ./log_conf.yaml ./
 
-CMD ["uv","run", "uvicorn",  "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-config", "log_conf.yaml"]
+CMD ["uv","run", "--no-group", "dev", "uvicorn",  "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-config", "log_conf.yaml"]
