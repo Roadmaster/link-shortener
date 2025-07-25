@@ -12,10 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: install venv
-        run: sudo apt-get install python3-virtualenv
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v6
       - name: run unit tests
         run: |
-          python3 -mvenv venv
-          venv/bin/pip install -r requirements-dev.txt
-          venv/bin/pytest
+          uv run pytest
