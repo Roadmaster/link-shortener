@@ -33,4 +33,4 @@ RUN --mount=type=cache,target=/opt/uv-cache uv sync --no-group dev --frozen --co
 COPY ./app /code/app
 COPY ./log_conf.yaml ./
 
-CMD ["uv","run", "--no-group", "dev", "uvicorn",  "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--log-config", "log_conf.yaml"]
+CMD ["uv","run", "--no-group", "dev", "uvicorn",  "app.main:app", "--host", "::", "--port", "8000", "--log-config", "log_conf.yaml"]
