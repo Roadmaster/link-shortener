@@ -10,6 +10,9 @@ swap_size_mb = 512
 #[deploy]
 #  strategy = "bluegreen"
 
+[experimental]
+use_zstd = true
+
 [metrics]
 port = 8000
 path = "/metrics"
