@@ -4,7 +4,7 @@
 #
 
 app = "roadmr-link-shortener"
-primary_region = "mia"
+primary_region = "ord"
 swap_size_mb = 512
 
 #[deploy]
