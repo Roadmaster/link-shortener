@@ -7,7 +7,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update -y && apt-get install --no-install-recommends -y \
-    python3 locales curl \
+    python3 locales curl postgresql-client-16 \
     && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 # Set the locale
