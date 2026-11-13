@@ -33,7 +33,7 @@ app.dependency_overrides[get_redis] = redis_client
 
 def test_root_response():
     response = client.get("/")
-    assert response.json() == {"message": "Actually, link shorteners are evil"}
+    assert response.json() == {"message": "Actually, link shorteners are evil. Party like it's 2025."}
 
 
 @pytest.mark.asyncio
