@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 FROM ubuntu:26.04
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
+#Terere
 
 # install build dependencies
 
